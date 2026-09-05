@@ -1,0 +1,6 @@
+{
+  "name": "Amazonía en Casa - Tienda Móvil",
+  "description": "E-commerce móvil de productos amazónicos: bebidas, snacks, artesanía, recuerditos, perfumes y medicinas naturales con catálogo interactivo, carrito y pedidos vía WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Amazonía en Casa</title>
+  <style>
+    path { fill: #254f3b; }
+    @media (prefers-color-scheme: dark) { path { fill: #b8d8bd; } }
+  </style>
+  <!-- Two riverbanks: the river and exterior are transparent cutouts. -->
+  <path d="M106 90C145 53 197 33 253 33C370 33 465 129 465 248C465 318 431 383 377 422C402 382 396 359 368 341C345 326 323 318 341 295C357 276 388 264 375 241C350 195 229 191 154 163C108 146 87 126 106 90Z"/>
+  <path d="M88 118C61 157 47 202 47 248C47 367 140 463 255 463C295 463 331 448 335 417C340 386 297 370 275 353C251 335 252 317 275 293C303 264 302 250 270 235C222 212 141 209 107 182C84 164 79 142 88 118Z"/>
+</svg>
