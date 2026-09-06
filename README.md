@@ -1,37 +1,34 @@
 # Amazonía en Casa
 
-Una tienda web de demostración de productos amazónicos: chocolates, artesanía y cuidado personal.
-
 [Ver la tienda](https://luchonoprograma.github.io/amazonia-en-casa/)
 
-Puedes buscar y filtrar productos, ver sus fichas, guardar favoritos y armar un carrito. Al terminar, la aplicación prepara una solicitud para WhatsApp; la compra se coordina allí.
+Amazonía en Casa es una tienda web de productos amazónicos. Reúne alimentos, artesanía y cuidado personal en un catálogo que puedes explorar desde el celular o la computadora.
 
-El botón **Administrar tienda** permite probar la edición de productos, precios, ofertas y cupones. Es de acceso público y los cambios se guardan solo en tu navegador. No modifican el catálogo que ven otras personas.
+Permite buscar productos, filtrarlos por categoría, consultar sus detalles, guardar favoritos y añadirlos al carrito. Desde el carrito puedes indicar tus datos y la forma de entrega para preparar una solicitud por WhatsApp.
 
-Es un proyecto de portfolio con datos de ejemplo. No tiene backend ni procesa pagos o registra pedidos. Está hecho con React, TypeScript y Vite.
+También incluye un panel de administración para crear y editar productos, cambiar precios, gestionar ofertas y configurar cupones.
 
-## Ejecutarlo en tu equipo
+## Sobre el proyecto
+
+Está desarrollado con React, TypeScript y Vite. Es un proyecto de portfolio con un catálogo de ejemplo, sin backend ni procesamiento de pagos. El carrito, los favoritos y los cambios del administrador se guardan en el navegador; no se comparten entre usuarios o dispositivos.
+
+## Instalación
 
 Necesitas Node.js 22 y npm.
 
 ```bash
-npm ci
+git clone https://github.com/LuchoNoPrograma/amazonia-en-casa.git
+cd amazonia-en-casa
+npm install
 npm run dev
 ```
 
-Abre http://localhost:3000. No necesitas claves de API.
+Abre [localhost:3000](http://localhost:3000). No hace falta configurar claves de API ni una base de datos.
 
-## Publicación
+## Cómo probarlo
 
-GitHub Actions ejecuta `npm run lint`, compila y publica en GitHub Pages cada cambio en `master`. También se puede lanzar desde la pestaña **Actions**.
+Busca un producto, abre su ficha y añádelo al carrito. Puedes cambiar cantidades, guardar favoritos y recargar la página para comprobar que se conservan.
 
-Para probar la misma compilación localmente:
+En **Administrar tienda** puedes editar el catálogo y probar ofertas y cupones. Los cambios solo afectan a tu navegador. El catálogo inicial está en `src/data/products.ts`.
 
-```bash
-BASE_PATH=/amazonia-en-casa/ SITE_URL=https://luchonoprograma.github.io/amazonia-en-casa/ npm run build
-BASE_PATH=/amazonia-en-casa/ npm run preview
-```
-
-Abre http://localhost:4173/amazonia-en-casa/.
-
-El catálogo público se edita en `src/data/products.ts`. La compilación genera la portada y una página por producto en `dist/`. Las [fuentes de las fotografías](public/creditos.html) están incluidas en el proyecto.
+La opción de WhatsApp prepara el mensaje de solicitud para que lo revises antes de enviarlo. No confirma una compra ni registra un pedido.
