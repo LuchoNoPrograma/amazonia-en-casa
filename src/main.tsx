@@ -5,10 +5,11 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { MotionConfig } from "motion/react";
 import App from "./App.tsx";
 import "./index.css";
+import { BASE_PATH } from './sitePath';
 
 const app = (
   <StrictMode>
-    <MotionConfig reducedMotion="user"><BrowserRouter><NavigationEffects/><App /></BrowserRouter></MotionConfig>
+    <MotionConfig reducedMotion="user"><BrowserRouter basename={BASE_PATH}><NavigationEffects/><App /></BrowserRouter></MotionConfig>
   </StrictMode>
 );
 const root = document.getElementById("root")!;

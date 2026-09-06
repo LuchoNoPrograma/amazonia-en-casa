@@ -1,3 +1,4 @@
+import { sitePath } from './sitePath';
 import { useLocation, useNavigate } from "react-router-dom";
 import { StoreLink } from "./components/StoreLink";
 import { ProductPage } from "./components/ProductPage";
@@ -351,7 +352,7 @@ export default function App() {
           <section className="hero">
             <img
               className="hero-image"
-              src="/images/hero-coffee.jpg"
+              src={sitePath("/images/hero-coffee.jpg")}
               alt="Detalle de granos de café tostado"
               width="1800"
               height="1000"
@@ -622,7 +623,7 @@ export default function App() {
         <div className="container footer-main">
           <div>
             <StoreLink href="/" className="wordmark" aria-label="Amazonía en Casa, inicio">
-              <img className="brand-logo brand-logo-night" src="/images/brand/logo-noche.png" alt="" width="880" height="240" loading="lazy" />
+              <img className="brand-logo brand-logo-night" src={sitePath("/images/brand/logo-noche.png")} alt="" width="880" height="240" loading="lazy" />
             </StoreLink>
             <p>
               Productos con historia y origen.

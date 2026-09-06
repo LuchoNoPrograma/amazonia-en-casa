@@ -2,9 +2,12 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
+import { BASE_PATH } from './src/sitePath';
 
 export default defineConfig(() => {
   return {
+    base: BASE_PATH,
+    define: { __BASE_PATH__: JSON.stringify(BASE_PATH) },
     appType: 'mpa',
     plugins: [react(), tailwindcss(), {
       name: 'product-pages-development',

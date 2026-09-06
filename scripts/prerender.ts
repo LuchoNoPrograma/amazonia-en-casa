@@ -1,3 +1,4 @@
+import { BASE_PATH, sitePath } from '../src/sitePath';
 import { StaticRouter } from "react-router-dom";
 import React from 'react';
 import { renderToString } from 'react-dom/server';
@@ -14,8 +15,8 @@ if (!template.includes('<div id="root"></div>')) throw new Error('Missing preren
 const env = loadEnv('production', process.cwd(), 'SITE_URL');
 const configuredUrl = (process.env.SITE_URL ?? env.SITE_URL ?? '').trim();
 const siteUrl = configuredUrl ? new URL(configuredUrl) : undefined;
-if (siteUrl && (siteUrl.protocol !== 'https:' || siteUrl.username || siteUrl.password || siteUrl.pathname !== '/' || siteUrl.search || siteUrl.hash || siteUrl.hostname === 'localhost' || !siteUrl.hostname.includes('.'))) {
-  throw new Error('SITE_URL must be the public HTTPS origin, without a path, credentials, query or fragment.');
+if (siteUrl && (siteUrl.protocol !== 'https:' || siteUrl.username || siteUrl.password || siteUrl.pathname !== BASE_PATH || siteUrl.search || siteUrl.hash || siteUrl.hostname === 'localhost' || !siteUrl.hostname.includes('.'))) {
+  throw new Error('SITE_URL must be a public HTTPS URL whose path matches BASE_PATH, without credentials, query or fragment.');
 }
 const escape = (value: string) => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'})[char]!);
 const paths = ['/', ...PUBLIC_PRODUCTS.map(productPath)];
@@ -31,8 +32,8 @@ function renderPage(pathname: string, product?: Product, notFound = false) {
   }
   if (notFound) html = html.replace('index, follow, max-image-preview:large', 'noindex, follow');
   if (siteUrl && !notFound) {
-    const url = new URL(pathname, siteUrl).href;
-    const image = new URL(product?.image ?? '/images/hero-coffee.jpg', siteUrl).href;
+    const url = new URL(sitePath(pathname), siteUrl).href;
+    const image = new URL(sitePath(product?.image ?? '/images/hero-coffee.jpg'), siteUrl).href;
     const imageAlt = product?.name ?? 'Granos de café tostado, portada de Amazonía en Casa';
     // The catalog uses demo prices: do not advertise fake offers or reviews.
     const data = product ? {
@@ -53,7 +54,7 @@ function renderPage(pathname: string, product?: Product, notFound = false) {
     <script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
   </head>`);
   }
-  const markup = renderToString(React.createElement(MotionConfig, { reducedMotion: 'user' }, React.createElement(StaticRouter, { location: pathname }, React.createElement(App))));
+  const markup = renderToString(React.createElement(MotionConfig, { reducedMotion: 'user' }, React.createElement(StaticRouter, { basename: BASE_PATH, location: sitePath(pathname) }, React.createElement(App))));
   return html.replace('<div id="root"></div>', `<div id="root">${markup}</div>`);
 }
 await writeFile(new URL('index.html', dist), renderPage('/'));
@@ -66,7 +67,7 @@ for (const product of PUBLIC_PRODUCTS) {
 await writeFile(new URL('404.html', dist), renderPage('/404/', undefined, true));
 let robots = 'User-agent: *\nAllow: /\n';
 if (siteUrl) {
-  const entries = paths.map(pathname => `<url><loc>${escape(new URL(pathname, siteUrl).href)}</loc></url>`).join('\n');
+  const entries = paths.map(pathname => `<url><loc>${escape(new URL(sitePath(pathname), siteUrl).href)}</loc></url>`).join('\n');
   await writeFile(new URL('sitemap.xml', dist), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`);
   robots += `\nSitemap: ${new URL('sitemap.xml', siteUrl).href}\n`;
 } else {

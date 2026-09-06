@@ -1,3 +1,4 @@
+import { sitePath } from './sitePath';
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
 import { publicProduct, productPath, productSeo } from './productRoutes';
@@ -16,8 +17,8 @@ function updateMetadata(pathname: string, origin?: string) {
   document.querySelector('meta[name="robots"]')?.setAttribute('content', missing ? 'noindex, follow' : 'index, follow, max-image-preview:large');
   document.querySelectorAll('link[rel="canonical"],meta[property="og:url"],meta[property="og:image"],meta[property="og:image:alt"],meta[name="twitter:image"],meta[name="twitter:image:alt"],script[type="application/ld+json"]').forEach(el => el.remove());
   if (!origin || missing) return;
-  const url = new URL(product ? productPath(product) : '/', origin).href;
-  const image = new URL(product?.image ?? '/images/hero-coffee.jpg', origin).href;
+  const url = new URL(sitePath(product ? productPath(product) : '/'), origin).href;
+  const image = new URL(sitePath(product?.image ?? '/images/hero-coffee.jpg'), origin).href;
   const imageAlt = product?.name ?? 'Granos de café tostado, portada de Amazonía en Casa';
   const canonical = document.createElement('link'); canonical.rel = 'canonical'; canonical.href = url; document.head.append(canonical);
   for (const [key,value] of [['og:url',url],['og:image',image],['og:image:alt',imageAlt],['twitter:image',image],['twitter:image:alt',imageAlt]]) {
@@ -26,8 +27,8 @@ function updateMetadata(pathname: string, origin?: string) {
   const data = product ? {
     '@context':'https://schema.org','@type':'WebPage',name:seo.title,description:seo.description,url,inLanguage:'es-BO',
     breadcrumb:{'@type':'BreadcrumbList',itemListElement:[
-      {'@type':'ListItem',position:1,name:'Inicio',item:new URL('/',origin).href},
-      {'@type':'ListItem',position:2,name:'Catálogo',item:new URL('/#catalogo',origin).href},
+      {'@type':'ListItem',position:1,name:'Inicio',item:new URL(sitePath('/'),origin).href},
+      {'@type':'ListItem',position:2,name:'Catálogo',item:new URL(sitePath('/#catalogo'),origin).href},
       {'@type':'ListItem',position:3,name:product.name,item:url},
     ]},
   } : {'@context':'https://schema.org','@type':'WebSite',name:'Amazonía en Casa',url,inLanguage:'es-BO',description:'Catálogo de demostración de chocolates, artesanía y cuidado personal de Bolivia, Brasil y Colombia.'};

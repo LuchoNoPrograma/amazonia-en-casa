@@ -1,3 +1,4 @@
+import { sitePath } from '../sitePath';
 import { StoreLink } from "./StoreLink";
 import { ShopSelect } from "./ShopSelect";
 import React from "react";
@@ -33,7 +34,7 @@ export function Header(p: HeaderProps) {
       </div>
       <div className="container header-main">
         <StoreLink className="wordmark" href="/" aria-label="Amazonía en Casa, inicio">
-          <img className="brand-logo brand-logo-day" src="/images/brand/logo-dia.png" alt="" width="880" height="240" fetchPriority="high" />
+          <img className="brand-logo brand-logo-day" src={sitePath("/images/brand/logo-dia.png")} alt="" width="880" height="240" fetchPriority="high" />
         </StoreLink>
 
         <div className="header-actions">

@@ -1,3 +1,4 @@
+import { sitePath } from '../sitePath';
 import { StoreLink } from "../components/StoreLink";
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
@@ -44,7 +45,7 @@ function ImageField({ value, onChange, onBusy }: { value: string; onChange: (s: 
   const alive = useRef(true);
   useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   return <div className="image-field">
-    <img src={value} alt="Vista previa del producto" onError={e => { if (!e.currentTarget.src.endsWith('/images/hero-coffee.jpg')) e.currentTarget.src = '/images/hero-coffee.jpg'; }} />
+    <img src={sitePath(value)} alt="Vista previa del producto" onError={e => { if (!e.currentTarget.src.endsWith('/images/hero-coffee.jpg')) e.currentTarget.src = sitePath('/images/hero-coffee.jpg'); }} />
     <div><button type="button" className="admin-secondary" disabled={busy} onClick={() => input.current?.click()}><ImagePlus size={17} />{busy ? 'Procesando imagen…' : 'Cambiar imagen'}</button>
       <input ref={input} type="file" aria-label="Subir archivo de imagen" accept="image/jpeg,image/png,image/webp" hidden onChange={async e => {
         const file = e.target.files?.[0]; if (!file) return; setBusy(true); onBusy(true); setError(''); setNotice('');
@@ -80,7 +81,7 @@ function ProductEditor({ initial, isNew, onSave, onClose, error }: {
       onSave({ ...product, name: product.name.trim(), price: Number(offer ? sale : regular), originalPrice: offer ? Number(regular) : undefined });
     }}>
       <div className="admin-dialog-body">
-        <ImageField value={productImage(product)} onChange={image => setProduct(p => ({ ...p, image, customImage: true }))} onBusy={setBusy} />
+        <ImageField value={product.image} onChange={image => setProduct(p => ({ ...p, image, customImage: true }))} onBusy={setBusy} />
         <div className="admin-form-section"><h3>Información del producto</h3>
           <label>Nombre del producto<input required maxLength={100} placeholder="Ej. Café artesanal de Pando" value={product.name} onChange={e => setProduct({ ...product, name: e.target.value })} /></label>
           <div className="admin-fields"><div className="admin-field"><span>Categoría</span><ShopSelect label="Categoría" value={product.category} onChange={v => setProduct({ ...product, category: v as Product['category'] })} options={CATEGORIES.filter(c => c.id !== 'todos').map(c => ({ value: c.id, label: c.label }))} /></div><label>Presentación<input required placeholder="Ej. 250 g" maxLength={40} value={product.weightVolume} onChange={e => setProduct({ ...product, weightVolume: e.target.value })} /></label></div>
@@ -142,7 +143,7 @@ export default function AdminPanel({ data, save, error }: Props) {
   const countLabel = `${products.length} ${products.length === 1 ? 'producto' : 'productos'}`;
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(''), 6000); return () => window.clearTimeout(timer); }, [notice]);
   return <div className="admin-shell">
-    <aside className="admin-nav"><StoreLink href="/" className="admin-brand"><img src="/images/brand/logo-noche.png" alt="Amazonía en Casa" width="220" height="60" /></StoreLink><p className="admin-nav-label">Administración</p>
+    <aside className="admin-nav"><StoreLink href="/" className="admin-brand"><img src={sitePath("/images/brand/logo-noche.png")} alt="Amazonía en Casa" width="220" height="60" /></StoreLink><p className="admin-nav-label">Administración</p>
       <nav aria-label="Administración">{([{ id: 'catalog', label: 'Catálogo', icon: Package }, { id: 'coupons', label: 'Cupones', icon: Tag }] as const).map(({ id, label, icon: Icon }) => <button key={id} aria-current={section === id ? 'page' : undefined} onClick={() => { setSection(id); setNotice(''); }}><Icon size={19} /><span>{label}</span></button>)}</nav>
       <div className="admin-nav-bottom"><StoreLink href="/"><ArrowLeft size={16} /> Volver a la tienda</StoreLink></div>
     </aside>
@@ -155,7 +156,7 @@ export default function AdminPanel({ data, save, error }: Props) {
           <div className="admin-list-toolbar"><div className="admin-search-field"><label htmlFor="admin-search">Buscar productos</label><div className="admin-search"><Search size={19} /><input ref={searchRef} id="admin-search" placeholder="Busca por nombre o marca…" value={search} onChange={e => setSearch(e.target.value)} />{search && <button type="button" aria-label="Borrar búsqueda" onClick={() => { setSearch(''); searchRef.current?.focus(); }}><X size={17} /></button>}</div></div><div className="admin-filter-field"><span>Mostrar</span><ShopSelect label="Filtrar productos" value={filter} onChange={setFilter} options={[{ value: 'all', label: 'Todos los productos' }, { value: 'published', label: 'Publicados' }, { value: 'draft', label: 'Ocultos' }, { value: 'offers', label: 'Con oferta' }]} /></div></div>
           <div className="admin-results"><p role="status"><strong>{countLabel}</strong>{search && ` para “${search}”`}</p>{(search || filter !== 'all') && <button className="text-link" onClick={() => { setSearch(''); setFilter('all'); }}>Limpiar filtros</button>}</div>
           <div className="admin-list-caption"><span>PRODUCTO</span><span>PRECIO / ESTADO</span></div>
-          {products.map(p => <button className="admin-product-row" key={p.id} onClick={() => { setNotice(''); setProduct({ ...p, image: productImage(p), customImage: true }); }} aria-label={`Editar ${p.name}`}><img src={productImage(p)} alt="" loading="lazy" /><span><strong>{p.name}</strong><small>{p.weightVolume} · {CATEGORIES.find(c => c.id === p.category)?.label}</small>{hasOffer(p) && <span className="admin-offer-badge"><Tag size={12} />Oferta −{Math.round((1 - p.price / p.originalPrice!) * 100)}%</span>}</span><span className="admin-row-price"><strong>{money(p.price)}</strong>{hasOffer(p) && <del>{money(p.originalPrice!)}</del>}<small className={p.hidden ? '' : 'is-live'}>{p.hidden ? 'Oculto' : p.inStock ? 'Publicado' : 'Agotado'}</small></span><Pencil size={16} /></button>)}
+          {products.map(p => <button className="admin-product-row" key={p.id} onClick={() => { setNotice(''); setProduct({ ...p, customImage: true }); }} aria-label={`Editar ${p.name}`}><img src={productImage(p)} alt="" loading="lazy" /><span><strong>{p.name}</strong><small>{p.weightVolume} · {CATEGORIES.find(c => c.id === p.category)?.label}</small>{hasOffer(p) && <span className="admin-offer-badge"><Tag size={12} />Oferta −{Math.round((1 - p.price / p.originalPrice!) * 100)}%</span>}</span><span className="admin-row-price"><strong>{money(p.price)}</strong>{hasOffer(p) && <del>{money(p.originalPrice!)}</del>}<small className={p.hidden ? '' : 'is-live'}>{p.hidden ? 'Oculto' : p.inStock ? 'Publicado' : 'Agotado'}</small></span><Pencil size={16} /></button>)}
           {!products.length && <div className="admin-empty"><Search /><h2>No encontramos productos</h2><p>Prueba otro nombre o cambia los filtros.</p><button className="admin-secondary" onClick={() => { setSearch(''); setFilter('all'); searchRef.current?.focus(); }}>Ver todos los productos</button></div>}
         </> : <><p className="admin-section-note">{data.coupons.length} cupones · Selecciona uno para editar sus condiciones.</p>{data.coupons.map(c => <button className="admin-coupon-row" key={c.id} aria-label={`Editar cupón ${c.code}`} onClick={() => { setNotice(''); setCoupon({ ...c }); }}><Tag size={23} /><span><strong>{c.code}</strong><span>{c.kind === 'percent' ? `${c.value}% de descuento` : `${money(c.value)} de descuento`} · Mínimo {money(c.minimum)}</span><small>{!c.active ? 'Pausado' : c.expires && new Date(`${c.expires}T23:59:59`) < new Date() ? 'Vencido' : 'Activo'} · {c.expires ? `Vence ${c.expires}` : 'Sin vencimiento'}</small></span><Pencil size={18} /></button>)}{!data.coupons.length && <div className="admin-empty"><Tag /><h2>Aún no hay cupones</h2><p>Crea el primero para ofrecer un descuento en el carrito.</p></div>}</>}
       </section>
