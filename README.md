@@ -1,6 +1,6 @@
 # Amazonía en Casa
 
-Una tienda web de demostración de productos amazónicos: chocolates, artesanía y cuidado personal de Bolivia, Brasil y Colombia.
+Una tienda web de demostración de productos amazónicos: chocolates, artesanía y cuidado personal.
 
 [Ver la tienda](https://luchonoprograma.github.io/amazonia-en-casa/)
 
